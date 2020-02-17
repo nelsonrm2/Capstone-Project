@@ -16,11 +16,7 @@ public class Game
     public void startGame()
     {
         board = new Piece[8][8];
-        Piece empty = new Piece('O', "Empty", false);
-        System.out.print(empty.toString() + "\n\n\n");
-
-        Piece blank = new Piece();
-        System.out.print(blank.toString() + "\n\n\n");
+        Piece empty = new Piece(' ', "\t", false);
 
         // Spawn in the pawns and the empty squares
         for(int index = 0; index < 8; index++)
@@ -90,7 +86,7 @@ public class Game
      */
     public boolean isOccupied(int column, int row)
     {
-        return board[column][row].getType() != "Empty";
+        return board[column][row].getType() != "\t";
     }
     
     /*
@@ -105,11 +101,12 @@ public class Game
     /*
      * Prints out the available moves for a piece at a given coordinate
      * Only handles unoccupied spaces at the moment
+     * TODO: Check for pieces that can be captured
      */
     public void checkMoves(int column, int row)
     {
         Piece piece = board[column][row];
-        Piece open = new Piece('X', "Available", false);
+        Piece open = new Piece(' ', "-\t", false);
 
         if(piece.getType() == "Pawn" && piece.getColor() == 'W')
         {
@@ -336,6 +333,40 @@ public class Game
         // For testing purposes only
         piece = new Piece('X', piece.getType(), piece.getHasMoved());
     }
+
+    public void clearBoard()
+    {
+        for(int column = 0; column < 8; column++)
+        {
+            for(int row = 0; row < 8; row++)
+            {
+                if(board[column][row].getType()== "-\t")
+                {
+                    board[column][row] = new Piece(' ', "\t", false);
+                }
+            }
+        }
+    }
+
+    public int move(int currColumn, int currRow, int newColumn, int newRow)
+    {
+        checkMoves(currColumn, currRow);
+        Piece current = board[currColumn][currRow];
+        Piece destination = board[newColumn][newRow];
+
+        if(destination.getType()== "-\t")
+        {
+            board[newColumn][newRow] = current;
+            board[currColumn][currRow] = new Piece(' ', "\t", true);
+            clearBoard();
+            return 0;
+        }
+        else
+        {
+            clearBoard();
+            return -1;
+        }
+    }
     
     public static void main(String[] args)
     {
@@ -343,10 +374,26 @@ public class Game
         g.startGame();
         g.printBoard();
         Scanner keyboard = new Scanner(System.in);
-        System.out.println("\nPlease enter a coordinate point");
-        int column = keyboard.nextInt();
-        int row = keyboard.nextInt();
-        g.checkMoves(column, row);
-        g.printBoard();
+        while(true)
+        {
+            System.out.println("\nSelect a piece");
+            int currColumn = keyboard.nextInt();
+            int currRow = keyboard.nextInt();
+            System.out.println("\nWhere will the " + g.board[currColumn][currRow].getType() + " move?");
+            g.checkMoves(currColumn, currRow);
+            g.printBoard();
+            System.out.print("\n");
+            int newColumn = keyboard.nextInt();
+            int newRow = keyboard.nextInt();
+            if(g.move(currColumn, currRow, newColumn, newRow) == -1)
+            {
+                System.out.println("That move cannot be made");
+                g.printBoard();
+            }
+            else
+            {
+                g.printBoard();
+            }
+        }
     }
 }
