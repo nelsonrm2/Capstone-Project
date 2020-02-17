@@ -3,25 +3,24 @@ public class Piece
     private char color;
     private String type;
     private boolean hasMoved;
+    private boolean canCapture;
 
     public Piece()
     {
-        color = 'A';
-        type = "None";
+        color = ' ';
+        type = "\t";
         hasMoved = false;
+        canCapture = false;
     }
 
-    public Piece(char newColor, String newType, boolean newHasMoved)
+    public Piece(char newColor, String newType, boolean newHasMoved, boolean newCanCapture)
     {
         color = newColor;
         type = newType;
         hasMoved = newHasMoved;
+        canCapture = newCanCapture;
     }
 
-    public void setHasMoved(boolean newHasMoved)
-    {
-        hasMoved = newHasMoved;
-    }
     public char getColor()
     {
         return color;
@@ -33,6 +32,14 @@ public class Piece
     public boolean getHasMoved()
     {
         return hasMoved;
+    }
+    public void setCanCapture(boolean newCanCapture)
+    {
+        canCapture = newCanCapture;
+    }
+    public boolean getCanCapture()
+    {
+        return canCapture;
     }
 
     public String toString()

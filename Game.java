@@ -16,47 +16,46 @@ public class Game
     public void startGame()
     {
         board = new Piece[8][8];
-        Piece empty = new Piece(' ', "\t", false);
 
         // Spawn in the pawns and the empty squares
         for(int index = 0; index < 8; index++)
         {
-            board[index][6] = new Piece('W', "Pawn", false);
-            board[index][5] = empty;
-            board[index][4] = empty;
-            board[index][3] = empty;
-            board[index][2] = empty;
-            board[index][1] = new Piece('B', "Pawn", false);
+            board[index][6] = new Piece('W', "Pawn", false, false);
+            board[index][5] = new Piece();
+            board[index][4] = new Piece();
+            board[index][3] = new Piece();
+            board[index][2] = new Piece();
+            board[index][1] = new Piece('B', "Pawn", false, false);
         }
         
         // Spawn in the rooks
-        board[0][7] = new Piece('W', "Rook", false);
-        board[7][7] = new Piece('W', "Rook", false);
-        board[0][0] = new Piece('B', "Rook", false);
-        board[7][0] = new Piece('B', "Rook", false);
+        board[0][7] = new Piece('W', "Rook", false, false);
+        board[7][7] = new Piece('W', "Rook", false, false);
+        board[0][0] = new Piece('B', "Rook", false, false);
+        board[7][0] = new Piece('B', "Rook", false, false);
 
 	// Spawn in the knights
-        board[1][7] = new Piece('W', "Knight", false);
-        board[6][7] = new Piece('W', "Knight", false);
-        board[1][0] = new Piece('B', "Knight", false);
-        board[6][0] = new Piece('B', "Knight", false);
+        board[1][7] = new Piece('W', "Knight", false, false);
+        board[6][7] = new Piece('W', "Knight", false, false);
+        board[1][0] = new Piece('B', "Knight", false, false);
+        board[6][0] = new Piece('B', "Knight", false, false);
 
         // Spawn in the bishops
-        board[2][7] = new Piece('W', "Bishop", false);
-        board[5][7] = new Piece('W', "Bishop", false);
-        board[2][0] = new Piece('B', "Bishop", false);
-        board[5][0] = new Piece('B', "Bishop", false);
+        board[2][7] = new Piece('W', "Bishop", false, false);
+        board[5][7] = new Piece('W', "Bishop", false, false);
+        board[2][0] = new Piece('B', "Bishop", false, false);
+        board[5][0] = new Piece('B', "Bishop", false, false);
 
         // Spawn in the queens
-        board[3][7] = new Piece('W', "Queen", false);
-        board[4][0] = new Piece('B', "Queen", false);
+        board[3][7] = new Piece('W', "Queen", false, false);
+        board[4][0] = new Piece('B', "Queen", false, false);
 
 	// Spawn in the kings
-        board[4][7] = new Piece('W', "King", false);
-        board[3][0] = new Piece('B', "King", false);
+        board[4][7] = new Piece('W', "King", false, false);
+        board[3][0] = new Piece('B', "King", false, false);
 
         // Spawn in a test piece
-        board[5][3] = new Piece('W', "King", false);
+        board[5][3] = new Piece('W', "King", false, false);
     }
     
     /*
@@ -106,7 +105,7 @@ public class Game
     public void checkMoves(int column, int row)
     {
         Piece piece = board[column][row];
-        Piece open = new Piece(' ', "-\t", false);
+        Piece open = new Piece(' ', "-\t", false, false);
 
         if(piece.getType() == "Pawn" && piece.getColor() == 'W')
         {
@@ -331,7 +330,7 @@ public class Game
         
         // Highlights the current piece
         // For testing purposes only
-        piece = new Piece('X', piece.getType(), piece.getHasMoved());
+        piece = new Piece('X', piece.getType(), piece.getHasMoved(), piece.getCanCapture());
     }
 
     public void clearBoard()
@@ -342,8 +341,9 @@ public class Game
             {
                 if(board[column][row].getType()== "-\t")
                 {
-                    board[column][row] = new Piece(' ', "\t", false);
+                    board[column][row] = new Piece(' ', "\t", false, false);
                 }
+                board[column][row].setCanCapture(false);
             }
         }
     }
@@ -357,7 +357,7 @@ public class Game
         if(destination.getType()== "-\t")
         {
             board[newColumn][newRow] = current;
-            board[currColumn][currRow] = new Piece(' ', "\t", true);
+            board[currColumn][currRow] = new Piece(' ', "\t", true, false);
             clearBoard();
             return 0;
         }
