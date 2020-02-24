@@ -13,12 +13,12 @@ public class Piece
         canCapture = false;
     }
 
-    public Piece(char newColor, String newType, boolean newHasMoved, boolean newCanCapture)
+    public Piece(char color, String type, boolean hasMoved, boolean canCapture)
     {
-        color = newColor;
-        type = newType;
-        hasMoved = newHasMoved;
-        canCapture = newCanCapture;
+        this.color = color;
+        this.type = type;
+        this.hasMoved = hasMoved;
+        this.canCapture = canCapture;
     }
 
     public char getColor()
@@ -33,13 +33,17 @@ public class Piece
     {
         return hasMoved;
     }
-    public void setCanCapture(boolean newCanCapture)
+    public void setHasMoved(boolean hasMoved)
     {
-        canCapture = newCanCapture;
+        this.hasMoved = hasMoved;
     }
     public boolean getCanCapture()
     {
         return canCapture;
+    }
+    public void setCanCapture(boolean canCapture)
+    {
+        this.canCapture = canCapture;
     }
 
     public String toString()
