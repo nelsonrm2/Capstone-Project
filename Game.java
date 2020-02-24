@@ -93,7 +93,7 @@ public class Game
      */
     public boolean isOccupied(int column, int row)
     {
-        return (!isOutOfBounds(column, row) && board[column][row].getType() != "\t");
+        return (!isOutOfBounds(column, row) && board[column][row].getColor() != ' ');
     }
     
     /*
@@ -550,7 +550,8 @@ public class Game
         // Handle moves for kings
         if(piece.getType() == "King")
         {
-            if(!isOutOfBounds(column, row - 1) && board[column][row - 1].getColor() != piece.getColor())
+            if(!isOutOfBounds(column, row - 1) && board[column][row - 1].getColor() != piece.getColor()
+               && board[column][row - 1].getColor() != ' ')
             {
                 board[column][row - 1].setCanCapture(true);
                 capturable[captureCount][0] = column;
@@ -559,7 +560,8 @@ public class Game
             }
             if(!isOutOfBounds(column, row - 1) && !isOccupied(column, row - 1))
                 board[column][row - 1] = open;
-            if(!isOutOfBounds(column, row + 1) && board[column][row + 1].getColor() != piece.getColor())
+            if(!isOutOfBounds(column, row + 1) && board[column][row + 1].getColor() != piece.getColor()
+               && board[column][row + 1].getColor() != ' ')
             {
                 board[column][row + 1].setCanCapture(true);
                 capturable[captureCount][0] = column;
@@ -568,7 +570,8 @@ public class Game
             }
             if(!isOutOfBounds(column, row + 1) && !isOccupied(column, row + 1))
                 board[column][row + 1] = open;
-            if(!isOutOfBounds(column - 1, row) && board[column - 1][row].getColor() != piece.getColor())
+            if(!isOutOfBounds(column - 1, row) && board[column - 1][row].getColor() != piece.getColor()
+               && board[column - 1][row].getColor() != ' ')
             {
                 board[column - 1][row].setCanCapture(true);
                 capturable[captureCount][0] = column - 1;
@@ -577,7 +580,8 @@ public class Game
             }
             if(!isOutOfBounds(column - 1, row) && !isOccupied(column - 1, row))
                 board[column - 1][row] = open;
-            if(!isOutOfBounds(column + 1, row) && board[column + 1][row].getColor() != piece.getColor())
+            if(!isOutOfBounds(column + 1, row) && board[column + 1][row].getColor() != piece.getColor()
+               && board[column + 1][row].getColor() != ' ')
             {
                 board[column + 1][row].setCanCapture(true);
                 capturable[captureCount][0] = column + 1;
@@ -586,7 +590,8 @@ public class Game
             }
             if(!isOutOfBounds(column + 1, row) && !isOccupied(column + 1, row))
                 board[column + 1][row] = open;
-            if(!isOutOfBounds(column - 1, row - 1) && board[column - 1][row - 1].getColor() != piece.getColor())
+            if(!isOutOfBounds(column - 1, row - 1) && board[column - 1][row - 1].getColor() != piece.getColor()
+               && board[column - 1][row - 1].getColor() != ' ')
             {
                 board[column - 1][row - 1].setCanCapture(true);
                 capturable[captureCount][0] = column - 1;
@@ -595,7 +600,8 @@ public class Game
             }
             if(!isOutOfBounds(column - 1, row - 1) && !isOccupied(column - 1, row - 1))
                 board[column - 1][row - 1] = open;
-            if(!isOutOfBounds(column + 1, row - 1) && board[column + 1][row - 1].getColor() != piece.getColor())
+            if(!isOutOfBounds(column + 1, row - 1) && board[column + 1][row - 1].getColor() != piece.getColor()
+               && board[column + 1][row - 1].getColor() != ' ')
             {
                 board[column + 1][row - 1].setCanCapture(true);
                 capturable[captureCount][0] = column + 1;
@@ -604,7 +610,8 @@ public class Game
             }
             if(!isOutOfBounds(column + 1, row - 1) && !isOccupied(column + 1, row - 1))
                 board[column + 1][row - 1] = open;
-            if(!isOutOfBounds(column - 1, row + 1) && board[column - 1][row + 1].getColor() != piece.getColor())
+            if(!isOutOfBounds(column - 1, row + 1) && board[column - 1][row + 1].getColor() != piece.getColor()
+               && board[column - 1][row + 1].getColor() != ' ')
             {
                 board[column - 1][row + 1].setCanCapture(true);
                 capturable[captureCount][0] = column - 1;
@@ -613,7 +620,8 @@ public class Game
             }
             if(!isOutOfBounds(column - 1, row + 1) && !isOccupied(column - 1, row + 1))
                 board[column - 1][row + 1] = open;
-            if(!isOutOfBounds(column + 1, row + 1) && board[column + 1][row + 1].getColor() != piece.getColor())
+            if(!isOutOfBounds(column + 1, row + 1) && board[column + 1][row + 1].getColor() != piece.getColor()
+               && board[column + 1][row + 1].getColor() != ' ')
             {
                 board[column + 1][row + 1].setCanCapture(true);
                 capturable[captureCount][0] = column + 1;
