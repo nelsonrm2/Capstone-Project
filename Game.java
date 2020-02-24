@@ -4,11 +4,12 @@ import java.util.Scanner;
  * This will be the main class that handles the fundamentals of the game
  * Ryan Nelson
  * Created 2/10/2020
- * Updated 2/17/2020
+ * Last updated 2/24/2020
  */
 public class Game
 {
     public Piece[][] board;
+    public boolean whiteMove;
     
     /*
      * Initialize the components of the board
@@ -16,6 +17,7 @@ public class Game
     public void startGame()
     {
         board = new Piece[8][8];
+        whiteMove = true;
 
         // Spawn in the pawns and the empty squares
         for(int index = 0; index < 8; index++)
@@ -387,7 +389,15 @@ public class Game
 
         if(destination.getType()== "-\t" || destination.getCanCapture())
         {
-            board[newColumn][newRow] = current;
+            if(current.getType() == "Pawn" && (newRow == 0 || newRow == 7))
+            {
+                char color = current.getColor();
+                board[newColumn][newRow] = new Piece(color, "Queen", true, false);
+            }
+            else
+            {
+                board[newColumn][newRow] = current;
+            }
             board[currColumn][currRow] = new Piece(' ', "\t", true, false);
             clearBoard();
             return 0;
@@ -410,20 +420,32 @@ public class Game
             System.out.println("\nSelect a piece");
             int currColumn = keyboard.nextInt();
             int currRow = keyboard.nextInt();
-            System.out.println("\nWhere will the " + g.board[currColumn][currRow].getType() + " move?");
-            g.checkMoves(currColumn, currRow);
-            g.printBoard();
-            System.out.print("\n");
-            int newColumn = keyboard.nextInt();
-            int newRow = keyboard.nextInt();
-            if(g.move(currColumn, currRow, newColumn, newRow) == -1)
+            if(g.whiteMove && g.board[currColumn][currRow].getColor() == 'B' ||
+                !g.whiteMove && g.board[currColumn][currRow].getColor() == 'W')
             {
-                System.out.println("That move cannot be made");
-                g.printBoard();
+                if(g.whiteMove)
+                    System.out.print("Only white pieces may move this turn");
+                if(!g.whiteMove)
+                    System.out.print("Only black pieces may move this turn");
             }
             else
             {
+                System.out.println("\nWhere will the " + g.board[currColumn][currRow].getType() + " move?");
+                g.checkMoves(currColumn, currRow);
                 g.printBoard();
+                System.out.print("\n");
+                int newColumn = keyboard.nextInt();
+                int newRow = keyboard.nextInt();
+                if(g.move(currColumn, currRow, newColumn, newRow) == -1)
+                    System.out.println("That move cannot be made");
+                else
+                {
+                    g.printBoard();
+                    if(g.whiteMove)
+                        g.whiteMove = false;
+                    else
+                        g.whiteMove = true;
+                }
             }
         }
     }
