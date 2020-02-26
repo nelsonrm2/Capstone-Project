@@ -4,7 +4,7 @@ import java.util.Scanner;
  * This will be the main class that handles the fundamentals of the game
  * Ryan Nelson
  * Created 2/10/2020
- * Last updated 2/24/2020
+ * Last updated 2/26/2020
  */
 public class Game
 {
@@ -171,6 +171,8 @@ public class Game
      * Prints out the available moves for a piece at a given coordinate
      * Valid unoccupied spaces are highlighted with a '-'
      * If an enemy piece is in a valid space, it is signified by the canCapture attribute
+     * For pieces that move in a straight line, spaces are continuously scanned and set as valid until
+     *   it comes across an occupied space or it reaches the end of the board
      */
     public void checkMoves(int column, int row)
     {
@@ -354,7 +356,8 @@ public class Game
             int tempRow = row;
             if(!isOutOfBounds(tempColumn - 2, tempRow - 1) && !isOccupied(tempColumn - 2, tempRow - 1))
                 board[tempColumn - 2][tempRow - 1] = open;
-            if(!isOutOfBounds(tempColumn - 2, tempRow - 1) && board[tempColumn - 2][tempRow - 1].getColor() != piece.getColor())
+            if(!isOutOfBounds(tempColumn - 2, tempRow - 1) && board[tempColumn - 2][tempRow - 1].getColor() != piece.getColor()
+               && board[tempColumn - 2][tempRow - 1].getColor() != ' ')
             {
                 board[tempColumn - 2][tempRow - 1].setCanCapture(true);
                 capturable[captureCount][0] = tempColumn - 2;
@@ -363,7 +366,8 @@ public class Game
             }
             if(!isOutOfBounds(tempColumn - 1, tempRow - 2) && !isOccupied(tempColumn - 1, tempRow - 2))
                 board[tempColumn - 1][tempRow - 2] = open;
-            if(!isOutOfBounds(tempColumn - 1, tempRow - 2) && board[tempColumn - 1][tempRow - 2].getColor() != piece.getColor())
+            if(!isOutOfBounds(tempColumn - 1, tempRow - 2) && board[tempColumn - 1][tempRow - 2].getColor() != piece.getColor()
+               && board[tempColumn - 1][tempRow - 2].getColor() != ' ')
             {
                 board[tempColumn - 1][tempRow - 2].setCanCapture(true);
                 capturable[captureCount][0] = tempColumn - 1;
@@ -372,7 +376,8 @@ public class Game
             }
             if(!isOutOfBounds(tempColumn + 2, tempRow - 1) && !isOccupied(tempColumn + 2, tempRow - 1))
                 board[tempColumn + 2][tempRow - 1] = open;
-            if(!isOutOfBounds(tempColumn + 2, tempRow - 1) && board[tempColumn + 2][tempRow - 1].getColor() != piece.getColor())
+            if(!isOutOfBounds(tempColumn + 2, tempRow - 1) && board[tempColumn + 2][tempRow - 1].getColor() != piece.getColor()
+               && board[tempColumn + 2][tempRow - 1].getColor() != ' ')
             {
                 board[tempColumn + 2][tempRow - 1].setCanCapture(true);
                 capturable[captureCount][0] = tempColumn + 2;
@@ -381,7 +386,8 @@ public class Game
             }
             if(!isOutOfBounds(tempColumn + 1, tempRow - 2) && !isOccupied(tempColumn + 1, tempRow - 2))
                 board[tempColumn + 1][tempRow - 2] = open;
-            if(!isOutOfBounds(tempColumn + 1, tempRow - 2) && board[tempColumn + 1][tempRow - 2].getColor() != piece.getColor())
+            if(!isOutOfBounds(tempColumn + 1, tempRow - 2) && board[tempColumn + 1][tempRow - 2].getColor() != piece.getColor()
+               && board[tempColumn + 1][tempRow - 2].getColor() != ' ')
             {
                 board[tempColumn + 1][tempRow - 2].setCanCapture(true);
                 capturable[captureCount][0] = tempColumn + 1;
@@ -390,7 +396,8 @@ public class Game
             }
             if(!isOutOfBounds(tempColumn + 2, tempRow + 1) && !isOccupied(tempColumn + 2, tempRow + 1))
                 board[tempColumn + 2][tempRow + 1] = open;
-            if(!isOutOfBounds(tempColumn + 2, tempRow + 1) && board[tempColumn + 2][tempRow + 1].getColor() != piece.getColor())
+            if(!isOutOfBounds(tempColumn + 2, tempRow + 1) && board[tempColumn + 2][tempRow + 1].getColor() != piece.getColor()
+               && board[tempColumn + 2][tempRow + 1].getColor() != ' ')
             {
                 board[tempColumn + 2][tempRow + 1].setCanCapture(true);
                 capturable[captureCount][0] = tempColumn + 2;
@@ -399,7 +406,8 @@ public class Game
             }
             if(!isOutOfBounds(tempColumn + 1, tempRow + 2) && !isOccupied(tempColumn + 1, tempRow + 2))
                 board[tempColumn + 1][tempRow + 2] = open;
-            if(!isOutOfBounds(tempColumn + 1, tempRow + 2) && board[tempColumn + 1][tempRow + 2].getColor() != piece.getColor())
+            if(!isOutOfBounds(tempColumn + 1, tempRow + 2) && board[tempColumn + 1][tempRow + 2].getColor() != piece.getColor()
+               && board[tempColumn + 1][tempRow + 2].getColor() != ' ')
             {
                 board[tempColumn + 1][tempRow + 2].setCanCapture(true);
                 capturable[captureCount][0] = tempColumn + 1;
@@ -408,7 +416,8 @@ public class Game
             }
             if(!isOutOfBounds(tempColumn - 2, tempRow + 1) && !isOccupied(tempColumn - 2, tempRow + 1))
                 board[tempColumn - 2][tempRow + 1] = open;
-            if(!isOutOfBounds(tempColumn - 2, tempRow + 1) && board[tempColumn - 2][tempRow + 1].getColor() != piece.getColor())
+            if(!isOutOfBounds(tempColumn - 2, tempRow + 1) && board[tempColumn - 2][tempRow + 1].getColor() != piece.getColor()
+               && board[tempColumn - 2][tempRow + 1].getColor() != ' ')
             {
                 board[tempColumn - 2][tempRow + 1].setCanCapture(true);
                 capturable[captureCount][0] = tempColumn - 2;
@@ -417,7 +426,8 @@ public class Game
             }
             if(!isOutOfBounds(tempColumn - 1, tempRow + 2) && !isOccupied(tempColumn - 1, tempRow + 2))
                 board[tempColumn - 1][tempRow + 2] = open;
-            if(!isOutOfBounds(tempColumn - 1, tempRow + 2) && board[tempColumn - 1][tempRow + 2].getColor() != piece.getColor())
+            if(!isOutOfBounds(tempColumn - 1, tempRow + 2) && board[tempColumn - 1][tempRow + 2].getColor() != piece.getColor()
+               && board[tempColumn - 1][tempRow + 2].getColor() != ' ')
             {
                 board[tempColumn - 1][tempRow + 2].setCanCapture(true);
                 capturable[captureCount][0] = tempColumn - 1;
@@ -694,6 +704,8 @@ public class Game
                 if(!g.whiteMove)
                     System.out.print("Only black pieces may move this turn");
             }
+            else if(g.board[currColumn][currRow].getColor() == ' ')
+                System.out.println("That space is empty");
             else
             {
                 System.out.println("\nWhere will the " + g.board[currColumn][currRow].getType() + " move?");
