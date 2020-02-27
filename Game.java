@@ -27,6 +27,8 @@ public class Game
         capturable = new int[10][2];
         whiteMove = true;
         kingInCheck = false;
+        checkCount = 0;
+        checkers = new int[10][2];
 
         // Spawn in the pawns and the empty squares
         for(int index = 0; index < 8; index++)
@@ -61,7 +63,7 @@ public class Game
         board[3][7] = new Piece('W', "Queen", false, false);
         board[4][0] = new Piece('B', "Queen", false, false);
 
-	// Spawn in the kings
+        // Spawn in the kings
         board[4][7] = new Piece('W', "King", false, false);
         board[3][0] = new Piece('B', "King", false, false);
     }
@@ -85,6 +87,7 @@ public class Game
         {
             System.out.print("\t" + index + "\t");
         }
+        System.out.print("\n");
     }
 
     /*
@@ -109,7 +112,6 @@ public class Game
      * Wipes away any leftovers from checkMoves()
      * Sets the canCapture attribute to false for all pieces on the board
      * Clears the '-' from any highlighted spaces
-     * Deletes any coordinates from the capturable array
      */
     public void clearBoard()
     {
@@ -122,6 +124,10 @@ public class Game
                 board[column][row].setCanCapture(false);
             }
         }
+    }
+
+    public void resetValues()
+    {
         for(int index = 0; index < captureCount; index++)
         {
             capturable[index][0] = 0;
@@ -132,14 +138,14 @@ public class Game
             checkers[index][0] = 0;
             checkers[index][1] = 0;
         }
-        captureCount = 0;
         checkCount = 0;
+        captureCount = 0;
     }
 
     /*
      * Scans through each piece to determine if the king is in danger
      */
-    public void checkForCheck()
+    public boolean checkForCheck()
     {
         for(int column = 0; column < 8; column++)
         {
@@ -155,16 +161,25 @@ public class Game
                         int currRow = capturable[index][1];
                         if(board[currColumn][currRow].getType() == "King")
                         {
+                            checkCount++;
                             kingInCheck = true;
+                            String kingColor;
+                            if(board[currColumn][currRow].getColor() == 'B')
+                                kingColor = "black";
+                            else
+                                kingColor = "white";
+                            System.out.println("The " + kingColor + " king at " + currColumn + "," + currRow + " is in danger from "
+                                               + current.getType() + " at " + column + "," + row);
                             checkers[checkCount][0] = column;
                             checkers[checkCount][1] = row;
-                            checkCount++;
                         }
                     }
                     clearBoard();
                 }
             }
         }
+        System.out.println("There are " + checkCount + " pieces that can check the king");
+        return kingInCheck;
     }
     
     /*
@@ -693,25 +708,25 @@ public class Game
         boolean finished = false;
         while(!finished)
         {
-            System.out.println("\nSelect a piece");
+            System.out.println("Select a piece");
             int currColumn = keyboard.nextInt();
             int currRow = keyboard.nextInt();
             if(g.whiteMove && g.board[currColumn][currRow].getColor() == 'B' ||
                 !g.whiteMove && g.board[currColumn][currRow].getColor() == 'W')
             {
                 if(g.whiteMove)
-                    System.out.print("Only white pieces may move this turn");
+                    System.out.println("Only white pieces may move this turn");
                 if(!g.whiteMove)
-                    System.out.print("Only black pieces may move this turn");
+                    System.out.println("Only black pieces may move this turn");
             }
             else if(g.board[currColumn][currRow].getColor() == ' ')
                 System.out.println("That space is empty");
             else
             {
-                System.out.println("\nWhere will the " + g.board[currColumn][currRow].getType() + " move?");
+                System.out.println("Where will the " + g.board[currColumn][currRow].getType() + " move?");
                 g.checkMoves(currColumn, currRow);
                 g.printBoard();
-                System.out.println("\nThere are " + g.captureCount + " pieces that can be captured");
+                System.out.println("There are " + g.captureCount + " pieces that can be captured");
                 if(g.captureCount > 0)
                 {
                     for(int index = 0; index < g.captureCount; index++)
@@ -719,21 +734,10 @@ public class Game
                         int column = g.capturable[index][0];
                         int row = g.capturable[index][1];
                         Piece current = g.board[column][row];
-                        System.out.println("There is a " + current.getType() + " at " + column + "," + row);
+                        System.out.println("Cap: There is a " + current.getType() + " at " + column + "," + row);
                     }
                 }
-                System.out.println("\nThere are " + g.checkCount + " pieces that can check the king");
-                if(g.checkCount > 0)
-                {
-                    for(int index = 0; index < g.checkCount; index++)
-                    {
-                        int column = g.checkers[index][0];
-                        int row = g.checkers[index][1];
-                        Piece current = g.board[column][row];
-                        System.out.println("There is a " + current.getType() + " at " + column + "," + row);
-                    }
-                }
-                System.out.print("\n");
+                //System.out.print("\n");
                 int newColumn = keyboard.nextInt();
                 int newRow = keyboard.nextInt();
                 if(g.move(currColumn, currRow, newColumn, newRow) == -1)
@@ -746,7 +750,22 @@ public class Game
                     else
                         g.whiteMove = true;
                 }
+                if(g.checkForCheck())
+                {
+                    System.out.println("Check");
+                }
+                if(g.checkCount > 0)
+                {
+                    for(int index = 0; index < g.checkCount; index++)
+                    {
+                        int column = g.checkers[index][0];
+                        int row = g.checkers[index][1];
+                        Piece current = g.board[column][row];
+                        System.out.println("Check: There is a " + current.getType() + " at " + column + "," + row);
+                    }
+                }
             }
+            g.resetValues();
         }
     }
 }
