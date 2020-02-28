@@ -8,13 +8,15 @@ import java.util.Scanner;
  */
 public class Game
 {
-    public Piece[][] board;	// Handles the board and all the pieces on it
-    public int[][] capturable;	// Handles a list of coordinates to pieces that can be captured
-    public int captureCount;	// Handles the number of pieces that can be captured
-    public boolean whiteMove;	// Handles which player's turn it is
-    public boolean kingInCheck;	// Handles whether or not the king is in danger
-    public int[][] checkers;	// Handles a list of coordinates to pieces that can attack the king
-    public int checkCount;	// Handles the number of pieces that can attack the king
+    public Piece[][] board;		// Handles the board and all the pieces on it
+    public int[][] capturable;		// Handles a list of coordinates to pieces that can be captured
+    public int captureCount;		// Handles the number of pieces that can be captured
+    public boolean whiteMove;		// Handles which player's turn it is
+    public boolean kingInCheck;		// Handles whether or not the king is in danger
+    public int[][] checkers;		// Handles a list of coordinates to pieces that can attack the king
+    public int checkCount;		// Handles the number of pieces that can attack the king
+    public Piece[] capturePile; 	// Handles the pieces that have been removed from the game
+    public int killCount;		// Handles the number of pieces that have been removed
     
     /*
      * Initialize the components of the board
@@ -29,6 +31,8 @@ public class Game
         kingInCheck = false;
         checkCount = 0;
         checkers = new int[1000][2];
+        capturePile = new Piece[32];
+        killCount = 0;
 
         // Spawn in the pawns and the empty squares
         for(int index = 0; index < 8; index++)
@@ -126,6 +130,10 @@ public class Game
         }
     }
 
+    /*
+     * Clears any values from the captureble array
+     * Sets the captureCount integer back to zero
+     */
     public void resetCaptureValues()
     {
         for(int index = 0; index < captureCount; index++)
@@ -136,6 +144,10 @@ public class Game
         captureCount = 0;
     }
 
+    /*
+     * Clears any values from the checkers array
+     * Sets the checkCount integer back to zero
+     */
     public void resetCheckValues()
     {
         for(int index = 0; index < checkCount; index++)
@@ -148,6 +160,9 @@ public class Game
 
     /*
      * Scans through each piece to determine if the king is in danger
+     * If check is possible, the kingInCheck flag is set to true
+     * Any pieces that can attack the king are added to the checkers array
+     * Returns true if the king is in danger, false if the king is safe
      */
     public boolean checkForCheck()
     {
@@ -692,6 +707,11 @@ public class Game
                 current.setHasMoved(true);
                 board[newColumn][newRow] = current;
             }
+            if(isOccupied(newColumn, newRow) && destination.getColor() != ' ')
+            {
+                capturePile[killCount] = destination;
+                killCount++;
+            }
             board[currColumn][currRow] = new Piece(' ', "\t", true, false);
             clearBoard();
             return 0;
@@ -743,10 +763,9 @@ public class Game
                         int column = g.capturable[index][0];
                         int row = g.capturable[index][1];
                         Piece current = g.board[column][row];
-                        System.out.println("Cap: There is a " + current.getType() + " at " + column + "," + row);
+                        System.out.println("\t" + (index + 1) + current.getType() + " " + column + "," + row);
                     }
                 }
-                //System.out.print("\n");
                 int newColumn = keyboard.nextInt();
                 int newRow = keyboard.nextInt();
                 if(g.move(currColumn, currRow, newColumn, newRow) == -1)
@@ -770,9 +789,13 @@ public class Game
                         int column = g.checkers[index][0];
                         int row = g.checkers[index][1];
                         Piece current = g.board[column][row];
-                        //System.out.println("Check: There is a " + current.getType() + " at " + column + "," + row);
                     }
                 }
+            }
+            System.out.println("So far, there have been " + g.killCount + " casualties");
+            for(int index = 0; index < g.killCount; index++)
+            {
+                System.out.println("\t" + (index + 1) + ": " + g.capturePile[index].getColor() + " " + g.capturePile[index].getType());
             }
             g.resetCheckValues();
             g.resetCaptureValues();
