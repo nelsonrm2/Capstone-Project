@@ -24,11 +24,11 @@ public class Game
     public void startGame()
     {
         board = new Piece[8][8];
-        capturable = new int[10][2];
+        capturable = new int[100][2];
         whiteMove = true;
         kingInCheck = false;
         checkCount = 0;
-        checkers = new int[10][2];
+        checkers = new int[1000][2];
 
         // Spawn in the pawns and the empty squares
         for(int index = 0; index < 8; index++)
@@ -61,11 +61,11 @@ public class Game
 
         // Spawn in the queens
         board[3][7] = new Piece('W', "Queen", false, false);
-        board[4][0] = new Piece('B', "Queen", false, false);
+        board[3][0] = new Piece('B', "Queen", false, false);
 
         // Spawn in the kings
         board[4][7] = new Piece('W', "King", false, false);
-        board[3][0] = new Piece('B', "King", false, false);
+        board[4][0] = new Piece('B', "King", false, false);
     }
     
     /*
@@ -126,20 +126,24 @@ public class Game
         }
     }
 
-    public void resetValues()
+    public void resetCaptureValues()
     {
         for(int index = 0; index < captureCount; index++)
         {
             capturable[index][0] = 0;
             capturable[index][1] = 0;
         }
+        captureCount = 0;
+    }
+
+    public void resetCheckValues()
+    {
         for(int index = 0; index < checkCount; index++)
         {
             checkers[index][0] = 0;
             checkers[index][1] = 0;
         }
         checkCount = 0;
-        captureCount = 0;
     }
 
     /*
@@ -152,9 +156,14 @@ public class Game
             for(int row = 0; row < 8; row++)
             {
                 Piece current = board[column][row];
-                if(current.getType() != "\t")
+                if(current.getColor() != ' ')
                 {
                     checkMoves(column, row);
+                    if(captureCount != 0)
+                    {
+                        System.out.println("There is a " + current.getType() + " at " + column + "," + row +
+                                           " that can capture " + captureCount + " pieces");
+                    }
                     for(int index = 0; index < captureCount; index++)
                     {
                         int currColumn = capturable[index][0];
@@ -170,13 +179,14 @@ public class Game
                                 kingColor = "white";
                             System.out.println("The " + kingColor + " king at " + currColumn + "," + currRow + " is in danger from "
                                                + current.getType() + " at " + column + "," + row);
-                            checkers[checkCount][0] = column;
-                            checkers[checkCount][1] = row;
+                            checkers[checkCount - 1][0] = column;
+                            checkers[checkCount - 1][1] = row;
                         }
                     }
-                    clearBoard();
+                resetCaptureValues();
                 }
             }
+            clearBoard();
         }
         System.out.println("There are " + checkCount + " pieces that can check the king");
         return kingInCheck;
@@ -704,7 +714,6 @@ public class Game
         g.startGame();
         g.printBoard();
         Scanner keyboard = new Scanner(System.in);
-        // TODO: handle endgame conditions for checkmate and stalemate
         boolean finished = false;
         while(!finished)
         {
@@ -761,11 +770,12 @@ public class Game
                         int column = g.checkers[index][0];
                         int row = g.checkers[index][1];
                         Piece current = g.board[column][row];
-                        System.out.println("Check: There is a " + current.getType() + " at " + column + "," + row);
+                        //System.out.println("Check: There is a " + current.getType() + " at " + column + "," + row);
                     }
                 }
             }
-            g.resetValues();
+            g.resetCheckValues();
+            g.resetCaptureValues();
         }
     }
 }
