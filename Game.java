@@ -723,6 +723,76 @@ public class Game
         }
     }
 
+    public void runGame(Scanner keyboard)
+    {
+        boolean finished = false;
+        while(!finished)
+        {
+            System.out.println("Select a piece");
+            int currColumn = keyboard.nextInt();
+            int currRow = keyboard.nextInt();
+            if(whiteMove && board[currColumn][currRow].getColor() == 'B' ||
+                !whiteMove && board[currColumn][currRow].getColor() == 'W')
+            {
+                if(whiteMove)
+                    System.out.println("Only white pieces may move this turn");
+                if(!whiteMove)
+                    System.out.println("Only black pieces may move this turn");
+            }
+            else if(board[currColumn][currRow].getColor() == ' ')
+                System.out.println("That space is empty");
+            else
+            {
+                System.out.println("Where will the " + board[currColumn][currRow].getType() + " move?");
+                checkMoves(currColumn, currRow);
+                printBoard();
+                System.out.println("There are " + captureCount + " pieces that can be captured");
+                if(captureCount > 0)
+                {
+                    for(int index = 0; index < captureCount; index++)
+                    {
+                        int column = capturable[index][0];
+                        int row = capturable[index][1];
+                        Piece current = board[column][row];
+                        System.out.println("\t" + (index + 1) + ": " + current.getType() + " " + column + "," + row);
+                    }
+                }
+                int newColumn = keyboard.nextInt();
+                int newRow = keyboard.nextInt();
+                if(move(currColumn, currRow, newColumn, newRow) == -1)
+                    System.out.println("That move cannot be made");
+                else
+                {
+                    printBoard();
+                    if(whiteMove)
+                        whiteMove = false;
+                    else
+                        whiteMove = true;
+                }
+                if(checkForCheck())
+                {
+                    System.out.println("Check");
+                }
+                if(checkCount > 0)
+                {
+                    for(int index = 0; index < checkCount; index++)
+                    {
+                        int column = checkers[index][0];
+                        int row = checkers[index][1];
+                        Piece current = board[column][row];
+                    }
+                }
+            }
+            System.out.println("So far, there have been " + killCount + " casualties");
+            for(int index = 0; index < killCount; index++)
+            {
+                System.out.println("\t" + (index + 1) + ": " + capturePile[index].getColor() + " " + capturePile[index].getType());
+            }
+            resetCheckValues();
+            resetCaptureValues();
+        }
+    }
+
     /*
      * Handles the creation of the game object and takes input from the user
      * Input is currently handled through a scanner object
@@ -734,71 +804,6 @@ public class Game
         g.startGame();
         g.printBoard();
         Scanner keyboard = new Scanner(System.in);
-        boolean finished = false;
-        while(!finished)
-        {
-            System.out.println("Select a piece");
-            int currColumn = keyboard.nextInt();
-            int currRow = keyboard.nextInt();
-            if(g.whiteMove && g.board[currColumn][currRow].getColor() == 'B' ||
-                !g.whiteMove && g.board[currColumn][currRow].getColor() == 'W')
-            {
-                if(g.whiteMove)
-                    System.out.println("Only white pieces may move this turn");
-                if(!g.whiteMove)
-                    System.out.println("Only black pieces may move this turn");
-            }
-            else if(g.board[currColumn][currRow].getColor() == ' ')
-                System.out.println("That space is empty");
-            else
-            {
-                System.out.println("Where will the " + g.board[currColumn][currRow].getType() + " move?");
-                g.checkMoves(currColumn, currRow);
-                g.printBoard();
-                System.out.println("There are " + g.captureCount + " pieces that can be captured");
-                if(g.captureCount > 0)
-                {
-                    for(int index = 0; index < g.captureCount; index++)
-                    {
-                        int column = g.capturable[index][0];
-                        int row = g.capturable[index][1];
-                        Piece current = g.board[column][row];
-                        System.out.println("\t" + (index + 1) + current.getType() + " " + column + "," + row);
-                    }
-                }
-                int newColumn = keyboard.nextInt();
-                int newRow = keyboard.nextInt();
-                if(g.move(currColumn, currRow, newColumn, newRow) == -1)
-                    System.out.println("That move cannot be made");
-                else
-                {
-                    g.printBoard();
-                    if(g.whiteMove)
-                        g.whiteMove = false;
-                    else
-                        g.whiteMove = true;
-                }
-                if(g.checkForCheck())
-                {
-                    System.out.println("Check");
-                }
-                if(g.checkCount > 0)
-                {
-                    for(int index = 0; index < g.checkCount; index++)
-                    {
-                        int column = g.checkers[index][0];
-                        int row = g.checkers[index][1];
-                        Piece current = g.board[column][row];
-                    }
-                }
-            }
-            System.out.println("So far, there have been " + g.killCount + " casualties");
-            for(int index = 0; index < g.killCount; index++)
-            {
-                System.out.println("\t" + (index + 1) + ": " + g.capturePile[index].getColor() + " " + g.capturePile[index].getType());
-            }
-            g.resetCheckValues();
-            g.resetCaptureValues();
-        }
+        g.runGame(keyboard);
     }
 }
