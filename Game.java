@@ -1,3 +1,9 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import java.util.Scanner;
 
 /*
@@ -8,15 +14,15 @@ import java.util.Scanner;
  */
 public class Game
 {
-    public Piece[][] board;		// Handles the board and all the pieces on it
-    public int[][] capturable;		// Handles a list of coordinates to pieces that can be captured
-    public int captureCount;		// Handles the number of pieces that can be captured
-    public boolean whiteMove;		// Handles which player's turn it is
-    public boolean kingInCheck;		// Handles whether or not the king is in danger
-    public int[][] checkers;		// Handles a list of coordinates to pieces that can attack the king
-    public int checkCount;		// Handles the number of pieces that can attack the king
-    public Piece[] capturePile; 	// Handles the pieces that have been removed from the game
-    public int killCount;		// Handles the number of pieces that have been removed
+    public Piece[][] board;     // Handles the board and all the pieces on it
+    public int[][] capturable;      // Handles a list of coordinates to pieces that can be captured
+    public int captureCount;        // Handles the number of pieces that can be captured
+    public boolean whiteMove;       // Handles which player's turn it is
+    public boolean kingInCheck;     // Handles whether or not the king is in danger
+    public int[][] checkers;        // Handles a list of coordinates to pieces that can attack the king
+    public int checkCount;      // Handles the number of pieces that can attack the king
+    public Piece[] capturePile;     // Handles the pieces that have been removed from the game
+    public int killCount;       // Handles the number of pieces that have been removed
     
     /*
      * Initialize the components of the board
@@ -792,7 +798,44 @@ public class Game
             resetCaptureValues();
         }
     }
-
+    
+    public Game()
+    {
+        JFrame frame = new JFrame();
+        Panel boardPanel = new Panel(new GridLayout(8, 8));
+        JButton[][] board = new JButton[8][8];
+        boolean whiteTile = true;
+        for(int column = 0; column < 8; column++)
+        {
+            for(int row = 0; row < 8; row++)
+            {
+                String title = column + "," + row;
+                if(whiteTile)
+                {
+                    board[column][row] = new JButton(new ImageIcon("C:\\Users\\ryanm\\Desktop\\whiteTile.png"));
+                    whiteTile = false;
+                }
+                else
+                {
+                    board[column][row] = new JButton(new ImageIcon("C:\\Users\\ryanm\\Desktop\\blackTile.png"));
+                    whiteTile = true;
+                }
+                //board[column][row] = new JFrame(new ImageIcon("C:\\Users\\ryanm\\Desktop\\whiteTile.png"));
+                boardPanel.add(board[column][row]);
+            }
+            if(whiteTile)
+                whiteTile = false;
+            else
+                whiteTile = true;
+        }
+        
+        frame.add(boardPanel);
+  
+        frame.setTitle("Chess Board"); // "super" Frame sets title
+        frame.setSize(550, 550);            // "super" Frame sets initial size
+        frame.setVisible(true);             // "super" Frame shows
+    }
+    
     /*
      * Handles the creation of the game object and takes input from the user
      * Input is currently handled through a scanner object
